@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace LygiagretusProgramavimasIP
 {
@@ -7,24 +8,30 @@ namespace LygiagretusProgramavimasIP
         public static void GrayscaleImage(string imagePath, string resultDirectory)
         {
             string resultPath = Path.Combine(resultDirectory, Path.GetFileName(imagePath));
-            using var inputImage = SKBitmap.Decode(imagePath);
-            var grayScaleImage = new SKBitmap(inputImage.Width, inputImage.Height);
-            for(int x = 0; x < inputImage.Width; x++)
+
+            using (Image<Rgba32> image = Image.Load<Rgba32>(imagePath))
             {
-                for(int y = 0; y < inputImage.Height; y++)
+                image.ProcessPixelRows(accessor =>
                 {
-                    var pixel = inputImage.GetPixel(x, y);
+                    for (int y = 0; y < accessor.Height; y++)
+                    {
+                        Span<Rgba32> row = accessor.GetRowSpan(y);
 
-                    byte grayValue = (byte)(0.299 * pixel.Red + 0.587 * pixel.Green + 0.114 * pixel.Blue);
-                    
-                    grayScaleImage.SetPixel(x, y, new SKColor(grayValue, grayValue, grayValue, pixel.Alpha));
-                }
+                        for (int x = 0; x < row.Length; x++)
+                        {
+                            ref Rgba32 pixel = ref row[x];
+
+                            byte gray = (byte)(0.299 * pixel.R + 0.587 * pixel.G + 0.114 * pixel.B);
+
+                            pixel.R = gray;
+                            pixel.G = gray;
+                            pixel.B = gray;
+                        }
+                    }
+                });
+
+                image.SaveAsPng(resultPath);
             }
-            using var surface = SKImage.FromPixels(grayScaleImage.PeekPixels());
-            using var outputData = surface.Encode(SKEncodedImageFormat.Png, 100);
-            using var outputStream = File.OpenWrite(resultPath);
-
-            outputData.SaveTo(outputStream);
         }
         public static List<string> ReadImageDirectory(string directoryPath)
         {

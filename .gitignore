@@ -3,6 +3,16 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Ignore the test images
+TestCases/*
+
+!TestCases/Default/
+
+!TestCases/Default/**
+
+#Ignore the Results
+Results/
+
 # User-specific files
 *.rsuser
 *.suo
