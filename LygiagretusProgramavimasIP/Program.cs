@@ -15,7 +15,7 @@ namespace LygiagretusProgramavimasIP
                 {
                     var start = DateTime.Now;
                     string projectDir = Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetParent(AppContext.BaseDirectory).FullName).FullName).FullName).FullName;
-                    string imageDirectory = "TestCases\\5";
+                    string imageDirectory = "TestCases\\Default";
                     string resultDirectory = "Results";
                     var fullResultPath = Path.Combine(projectDir, resultDirectory);
                     var fullImageDirectory = Path.Combine(projectDir, imageDirectory);
